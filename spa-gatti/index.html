@@ -1,0 +1,98 @@
+<html>
+    <head>
+        <title>Gatti casuali</title>
+        <style>
+
+            .centrato{
+                text-align: center;
+            }
+            #gatto-casuale{
+                height: 420px;
+            }
+            button{
+                font-size: 24px;
+                background-color: blueviolet;
+                padding: 6px;
+                border-radius: 6px;
+                color: white;
+                border: 1px solid blueviolet;
+            }
+            #bottone-ricarica:hover{
+                border: 3px solid black;
+            }
+            #gatti-salvati{
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: swrap;
+            }
+            #gatti-salvati img{
+                height: 100px;
+                margin: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="centrato">
+            <button id="bottone-ricarica">Ricarica gatto</button></br></br>
+            <button id="bottone-salva"> Salva gatto</button> </br></br>
+            <img id="gatto-casuale" src="" alt="Gatto casuale">
+        </div>
+
+        <div id="gatti-salvati"></div>
+        
+        <script>  // lo script si mette o nella head oppure in fondo al body
+            const immagine = document.getElementById("gatto-casuale");
+            const bottone = document.getElementById("bottone-ricarica");
+            const bottoneSalva = document.getElementById("bottone-salva");
+            const salvati = document.getElementById("gatti-salvati");
+
+            let arrayGatti = []; 
+
+
+
+            async function getRandomCat(){
+                const url = "https://cataas.com/cat?json=true";
+
+                try {
+                    const response = await fetch(url);
+                    if(response.ok){
+                        const cat = await response.json();
+                        console.log(cat);
+                        immagine.src = cat.url;
+                    }
+
+                }catch(e){
+                    console.log(e.message);
+                }
+            }
+
+            bottoneSalva.addEventListener("click", () =>{
+                arrayGatti.push(immagine.src);
+                renderizzaGatti();
+            });
+
+            function renderizzaGatti(){
+                salvati.innerHTML = ""; // svuoto il div con i gatti salvati
+
+                //riempiamo con tutti i gatti nell'array
+                for (let i=0; i<arrayGatti.length; i++){
+                    const nuovogatto = document.createElement("img");
+                    nuovogatto.src = arrayGatti[i];
+                    salvati.appendChild(nuovogatto);
+                }
+            }
+
+            bottone.addEventListener("click", getRandomCat);
+
+            getRandomCat();
+
+            /*
+            bottone.addEventListener("click", () => {
+                getRandomCat();
+            })*/
+
+            
+        </script>
+    </body>
+</html>
